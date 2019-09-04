@@ -3,16 +3,22 @@ const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
+const jwt = require('./jwt/_helper/jwt');
+const errorHandler = require('./jwt/_helper/error-handler');
+const userController = require('./jwt/users/users.controller');
 
 const app = express();
 const router = express.Router();
 app.use(cors());
 app.use(bodyParser.json());
+app.use(jwt());
+app.use('/users', userController);
+app.use(errorHandler);
 
 
 
-
-var mongoDB = `mongodb+srv://manju053:8050319599@mycluster-hoin2.mongodb.net/issues?retryWrites=true&w=majority`;
+//var mongoDB = `mongodb+srv://manju053:8050319599@mycluster-hoin2.mongodb.net/issues?retryWrites=true&w=majority`;
+var mongoDB = `mongodb://localhost:27017/Issues?retryWrites=true&w=majority`;
 mongoose.connect(mongoDB, {useNewUrlParser: true });
 const connection = mongoose.connection;
 
@@ -20,12 +26,14 @@ connection.on('open', () => {
     console.log("Mongo DB database connection established successfully");
 });
 
+
 app.use('/', router);
 router.route('/issues').get((req, res) => {
     Issue.find((err,issues) => {
         if(err) {
             console.log(err);
         } else {
+            console.log(issues);
             res.json(issues);
         }
     });
