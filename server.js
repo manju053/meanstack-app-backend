@@ -14,6 +14,7 @@ app.use(bodyParser.json());
 app.use(jwt());
 app.use('/users', userController);
 app.use(errorHandler);
+const upload = require('./upload')
 
 
 
@@ -89,5 +90,9 @@ router.route('/issues/delete/:id').get((req, res) => {
             res.json('Removed successfully');
     });
 });
+
+router.route('/upload').post((req, res) => {
+
+})
 //app.get('/', (req, res) => res.send('Hello World!'));
 app.listen(5000, () => console.log('express server running on port 5000'));
